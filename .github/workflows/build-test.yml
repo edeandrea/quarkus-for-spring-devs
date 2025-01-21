@@ -55,3 +55,58 @@ jobs:
           ./mvnw -B clean verify \
             -Dquarkus.http.host=0.0.0.0 \
             -Dmaven.compiler.release=${{ matrix.java }}
+
+  aot-build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java:
+          - '21'
+    name: "aot-build-test-${{ matrix.java }}"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: temurin
+          cache: maven
+
+      - name: "aot-build-test-java${{ matrix.java }}"
+        working-directory: chapter-4-spring-data-jpa
+        run: |
+          ./mvnw -B clean compile spring-boot:process-aot verify \
+            -Dquarkus.http.host=0.0.0.0 \
+            -Dmaven.compiler.release=${{ matrix.java }}
+
+  native-build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java:
+          - '21'
+        project:
+          - { name: 'chapter-4-quarkus-panache-repository', mavenParams: 'verify -Pnative' }
+          - { name: 'chapter-4-spring-data-jpa', mavenParams: 'test -PnativeTest' }
+    name: "${{ matrix.project.name }}-build-test-${{ matrix.java }}"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup GraalVM CE ${{ matrix.java }} distro
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          cache: 'maven'
+          native-image-job-reports: 'true'
+          native-image-pr-reports: 'true'
+
+      - name: "${{ matrix.project.name }}-native-build-test-java${{ matrix.java }}"
+        working-directory: ${{ matrix.project.name }}
+        run: |
+          ./mvnw -B clean ${{ matrix.project.mavenParams }} \
+            -Dquarkus.http.host=0.0.0.0 \
+            -Dmaven.compiler.release=${{ matrix.java }}
