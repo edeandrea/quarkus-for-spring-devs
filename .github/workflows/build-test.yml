@@ -38,7 +38,7 @@ jobs:
         project:
           - chapter-4-quarkus-panache-repository
           - chapter-4-spring-data-jpa
-    name: "${{ matrix.project }}-build-test-${{ matrix.java }}"
+    name: "jvm-${{ matrix.project }}-build-test-${{ matrix.java }}"
     steps:
       - uses: actions/checkout@v4
 
@@ -91,7 +91,7 @@ jobs:
         project:
           - { name: 'chapter-4-quarkus-panache-repository', mavenParams: 'verify -Pnative' }
           - { name: 'chapter-4-spring-data-jpa', mavenParams: 'test -PnativeTest' }
-    name: "${{ matrix.project.name }}-build-test-${{ matrix.java }}"
+    name: "native-${{ matrix.project.name }}-build-test-${{ matrix.java }}"
     steps:
       - uses: actions/checkout@v4
 
