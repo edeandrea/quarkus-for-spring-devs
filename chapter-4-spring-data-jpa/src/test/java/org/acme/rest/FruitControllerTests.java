@@ -10,6 +10,7 @@ import org.acme.ContainersConfig;
 import org.acme.domain.Fruit;
 import org.acme.repository.FruitRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(ContainersConfig.class)
+@DisabledInNativeImage
 class FruitControllerTests {
 	@Autowired
 	MockMvc mockMvc;

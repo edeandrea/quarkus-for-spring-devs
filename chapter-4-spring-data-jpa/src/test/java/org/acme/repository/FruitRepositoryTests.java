@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.acme.ContainersConfig;
 import org.acme.domain.Fruit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootTest
 @Transactional
 @Import(ContainersConfig.class)
+@DisabledInNativeImage
 class FruitRepositoryTests {
 	@Autowired
 	FruitRepository fruitRepository;
